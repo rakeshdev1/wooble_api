@@ -1,4 +1,5 @@
 <?php
+
 require_once "conn.php";
 require_once "validate.php";
 define('UPLOAD_PATH', 'blog_pic/');

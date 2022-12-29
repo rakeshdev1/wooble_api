@@ -10,15 +10,15 @@ $mail = new PHPMailer(true);
 try {
 	$mail->SMTPDebug = 2;									
 	$mail->isSMTP();											
-	$mail->Host	 = 'smtp.hostinger.com;';					
-	$mail->SMTPAuth = true;							
-	$mail->Username = 'info@wooble.email';				
-	$mail->Password = 'Jh05ax-2586INFO';						
-	$mail->SMTPSecure = 'tls';							
-	$mail->Port	 = 587;
+	$mail->Host	 = '';					
+	$mail->SMTPAuth = ;							
+	$mail->Username = '';				
+	$mail->Password = '';						
+	$mail->SMTPSecure = '';							
+	$mail->Port	 = ;
 
-	$mail->setFrom('info@wooble.email', 'OTP');		
-	$mail->addAddress('rakeshsutar85@gmail.com');
+	$mail->setFrom('');		
+	$mail->addAddress('');
 	//$mail->addAddress('receiver2@gfg.com', 'Name');
 	
 	$mail->isHTML(true);								
