@@ -2,21 +2,16 @@
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 if (isset($_POST['email'])) {
-
     require_once "conn.php";
     require_once "validate.php";
     require 'vendor/autoload.php';
     $email = validate($_POST['email']);
-    // $sql = " select id from user_info where email='$email' ";
-    // $result = $conn->query($sql);
     date_default_timezone_set("Asia/Calcutta");
     $date = date('Y-m-d H:i:s a', time());
-
     $stmt = $conn->prepare("select id from user_info where email=?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->bind_result($id_id);
-
     $id = null;
     while ($stmt->fetch()) {
         $id = $id_id;
@@ -78,3 +73,4 @@ if (isset($_POST['email'])) {
         echo "failure";
     }
 }
+?>

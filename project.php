@@ -1,36 +1,14 @@
 <?php
-
-//Constants for database connection
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'wooble');
-
+require_once "conn.php";
 require_once "validate.php";
-//We will upload files to this folder
-//So one thing don't forget, also create a folder named uploads inside your project folder i.e. MyApi folder
 define('UPLOAD_PATH', 'project_data/');
-
-//connecting to database
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die('Unable to connect');
-
-//An array to display the response
 $response = array();
-
-//if the call is an api call
 if (isset($_GET['apicall'])) {
-
-    //switching the api call
     switch ($_GET['apicall']) {
-
-            //if it is an upload call we will upload the image
         case 'insertprojectdata':
             $server_ip = gethostbyname(gethostname());
             if (isset($_POST['email_id'])) {
-
                 try {
-
-                    //$email_id = $project_name = $aim_of_project = $description = $decode_image_1_name = $decode_image_2_name = $decode_image_3_name = $decode_image_4_name = $decode_image_5_name = $decode_image_6_name = $decode_video_name = $decode_project_pdf_name = $conclusion = $file_created = null;
                     $email_id = $_POST['email_id'];
                     $project_name = $_POST['project_name'];
                     if ($project_name == "") {
@@ -146,15 +124,12 @@ if (isset($_GET['apicall'])) {
                 $response['message'] = "Required params not available";
             }
             break;
-
-
         case 'updateprojectdata':
             $server_ip = gethostbyname(gethostname());
             if (isset($_POST['email_id'])) {
 
                 try {
 
-                    //$email_id = $project_name = $aim_of_project = $description = $decode_image_1_name = $decode_image_2_name = $decode_image_3_name = $decode_image_4_name = $decode_image_5_name = $decode_image_6_name = $decode_video_name = $decode_project_pdf_name = $conclusion = $file_created = null;
                     $file_id = $_POST['file_id'];
                     $email_id = base64_decode($_POST['email_id']);
                     
@@ -278,15 +253,6 @@ if (isset($_GET['apicall'])) {
                         file_put_contents(UPLOAD_PATH . $video_name . ".mp4", $decode_video);
                         $decode_video_name = 'http://' . $server_ip . '/wooble-api/' . UPLOAD_PATH . $video_name . ".mp4";
                     }
-
-
-                    // if ($video != null) {
-                    //     $video_name = $email_id . "_project_video_1_" . $file_id;
-                    //     $decode_video = base64_decode("$video");
-                    //     file_put_contents(UPLOAD_PATH . $video_name . ".mp4", $decode_video);
-                    //     $decode_video_name = 'http://' . $server_ip . '/wooble-api/' . UPLOAD_PATH . $video_name . ".mp4";
-                    // }
-
                     if (startsWith(base64_decode($project_pdf), "http")) {
                         $decode_project_pdf_name=base64_decode($project_pdf);
                     } else if (base64_decode($project_pdf) == "NULL") {
@@ -298,21 +264,6 @@ if (isset($_GET['apicall'])) {
                         file_put_contents(UPLOAD_PATH . $project_pdf_name . ".pdf", $decode_project_pdf);
                         $decode_project_pdf_name = 'http://' . $server_ip . '/wooble-api/' . UPLOAD_PATH . $project_pdf_name . ".pdf";
                     }
-
-
-                    // if ($project_pdf != null) {
-                    //     $project_pdf_name = $email_id . "_project_pdf_1_" . $file_id;
-                    //     $decode_project_pdf = base64_decode("$project_pdf");
-                    //     file_put_contents(UPLOAD_PATH . $project_pdf_name . ".pdf", $decode_project_pdf);
-                    //     $decode_project_pdf_name = 'http://' . $server_ip . '/wooble-api/' . UPLOAD_PATH . $project_pdf_name . ".pdf";
-                    // }
-
-
-                    
-
-
-
-
                     $zeero = null;
                     $stmt1 = $conn->prepare("UPDATE `project_db` SET `project_name`=?,`aim_of_project`=?,`description`=?,`image_1`=?,`image_2`=?,`image_3`=?,`image_4`=?,`image_5`=?,`image_6`=?,`video`=?,`pdf_file`=?,`conclusion`=?,`file_created`=? WHERE `file_id`=? AND `email_id`=?");
                     $stmt1->bind_param("sssssssssssssss", $zeero, $zeero, $zeero, $zeero, $zeero, $zeero, $zeero, $zeero, $zeero, $zeero, $zeero, $zeero, $zeero, $file_id, $email_id);
@@ -337,23 +288,14 @@ if (isset($_GET['apicall'])) {
                 $response['message'] = "Required params not available";
             }
             break;
-
-            //in this call we will fetch all the images
         case 'getprojectdata':
-
             $server_ip = gethostbyname(gethostname());
-
             $profileEmail = validate($_POST['email_id']);
-            //query to get images from database
             $stmt = $conn->prepare("SELECT `file_id`, `email_id`, `project_name`, `aim_of_project`, `description`, `image_1`, `image_2`, `image_3`, `image_4`, `image_5`, `image_6`, `video`, `pdf_file`, `conclusion` FROM `project_db` WHERE email_id=?");
             $stmt->bind_param("s", $profileEmail);
             $stmt->execute();
             $stmt->bind_result($file_id, $email_id, $project_name, $aim_of_project, $description, $image_1, $image_2, $image_3, $image_4, $image_5, $image_6, $video, $pdf_file, $conclusion);
-
             $images = array();
-
-            //fetching all the images from database
-            //and pushing it to array
             while ($stmt->fetch()) {
                 $temp = array();
                 $temp['file_id'] = $file_id;
@@ -370,29 +312,20 @@ if (isset($_GET['apicall'])) {
                 $temp['video'] = $video;
                 $temp['pdf_file'] = $pdf_file;
                 $temp['conclusion'] = $conclusion;
-
                 array_push($images, $temp);
             }
 
             header('Content-Type: application/json');
             echo json_encode($images);
-            //pushing the array in response
             $response['error'] = false;
             $response['images'] = $images;
             break;
-
-
-            //if it is an upload call we will upload the image
         case 'deleteprojectdata':
 
-            //first confirming that we have the image and tags in the request parameter
             if (isset($_POST['file_id']) && isset($_POST['email_id'])) {
-
-                //uploading file and storing it to database as well
                 try {
                     $stmt1 = $conn->prepare("DELETE FROM `project_db` WHERE `file_id`=? AND `email_id`=?");
                     $stmt1->bind_param("ss", $_POST['file_id'], $_POST['email_id']);
-
                     if ($stmt1->execute()) {
                         $response['error'] = false;
                         $response['message'] = 'Project deleted successfully';
@@ -422,5 +355,4 @@ if (isset($_GET['apicall'])) {
     echo "The page that you have requested could not be found.";
     exit();
 }
-
-//displaying the response in json
+?>

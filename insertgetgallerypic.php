@@ -1,36 +1,13 @@
 <?php
-
-//Constants for database connection
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'wooble');
-
-//We will upload files to this folder
-//So one thing don't forget, also create a folder named uploads inside your project folder i.e. MyApi folder
-define('UPLOAD_PATH', 'gallery_pic/');
-
-//connecting to database
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die('Unable to connect');
-
-//An array to display the response
+require_once "conn.php";
+require_once "validate.php";
+define('UPLOAD_PATH', '../gallery/upload/');
 $response = array();
-
-//if the call is an api call
 if (isset($_GET['apicall'])) {
-
-    //switching the api call
     switch ($_GET['apicall']) {
-
-        //if it is an upload call we will upload the image
         case 'insertgallerypic':
-
-            //first confirming that we have the image and tags in the request parameter
             if (isset($_FILES['pic']['name'])) {
-
                 $return_id;
-
-                //uploading file and storing it to database as well
                 try {
                     move_uploaded_file($_FILES['pic']['tmp_name'], UPLOAD_PATH . $_FILES['pic']['name']);
                     $stmt1 = $conn->prepare("INSERT INTO `gallery_db`(`file_name`,`thumbnail`,`file_content`) VALUES (?,?,?)");
@@ -48,8 +25,6 @@ if (isset($_GET['apicall'])) {
                                 $temp['return_id'] = $return_id;
                                 array_push($images, $temp);
                             }
-
-                            //pushing the array in response
                             $response['error'] = false;
                             $response['images'] = $images;
                             break;
@@ -73,34 +48,21 @@ if (isset($_GET['apicall'])) {
 
             break;
 
-        //in this call we will fetch all the images
         case 'getgallerydata':
-
-            //getting server ip for building image url
             $server_ip = gethostbyname(gethostname());
-
             $profileEmail = $_POST['profileEmail'];
-
-            //query to get images from database
             $stmt = $conn->prepare("SELECT file_id,file_content, title,description FROM gallery_db WHERE email_id='$profileEmail' ");
             $stmt->execute();
             $stmt->bind_result($id,$image, $title, $description);
-
             $images = array();
-
-            //fetching all the images from database
-            //and pushing it to array
             while ($stmt->fetch()) {
                 $temp = array();
                 $temp['id']=$id;
                 $temp['image'] = 'http://' . $server_ip . '/wooble-api/' . UPLOAD_PATH . $image;
                 $temp['title'] = $title;
                 $temp['description'] = $description;
-
                 array_push($images, $temp);
             }
-
-            //pushing the array in response
             $response['error'] = false;
             $response['images'] = $images;
             break;
@@ -117,7 +79,6 @@ if (isset($_GET['apicall'])) {
     exit();
 }
 
-//displaying the response in json
 header('Content-Type: application/json');
-//echo json_encode($response);
 echo json_encode($images);
+?>

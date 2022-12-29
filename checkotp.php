@@ -27,3 +27,4 @@ if (isset($_POST['email']) && isset($_POST['otp'])) {
         echo "failure";
     }
 }
+?>
