@@ -52,7 +52,7 @@ if (isset($_GET['apicall'])) {
         case 'getgallerydata':
             $server_ip = gethostbyname(gethostname());
             $profileEmail = $_POST['profileEmail'];
-            $stmt = $conn->prepare("SELECT file_id,file_content, title,description FROM gallery_db WHERE email_id='$profileEmail' ");
+            $stmt = $conn->prepare("SELECT file_id,file_name, title,description FROM gallery_db WHERE email_id='$profileEmail' ");
             $stmt->execute();
             $stmt->bind_result($id,$image, $title, $description);
             $images = array();
