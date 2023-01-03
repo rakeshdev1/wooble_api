@@ -1,7 +1,8 @@
 <?php
 require_once "conn.php";
 require_once "validate.php";
-define('UPLOAD_PATH', '../gallery/upload/');
+define('UPLOAD_PATH', '../gallery/upload/
+');
 $response = array();
 if (isset($_GET['apicall'])) {
     switch ($_GET['apicall']) {
@@ -58,7 +59,7 @@ if (isset($_GET['apicall'])) {
             while ($stmt->fetch()) {
                 $temp = array();
                 $temp['id']=$id;
-                $temp['image'] = 'http://' . $server_ip . '/wooble-api/' . UPLOAD_PATH . $image;
+                $temp['image'] = 'https://' . 'app.wooble.org/gallery/upload/' . $image;
                 $temp['title'] = $title;
                 $temp['description'] = $description;
                 array_push($images, $temp);
