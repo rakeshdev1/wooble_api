@@ -1,7 +1,7 @@
 <?php
 require_once "conn.php";
 require_once "validate.php";
-define('UPLOAD_PATH', 'resume/');
+define('UPLOAD_PATH', '../home/pdf_files/');
 $response = array();
 if (isset($_GET['apicall'])) {
     switch ($_GET['apicall']) {
@@ -91,7 +91,7 @@ if (isset($_GET['apicall'])) {
             while ($stmt->fetch()) {
                 $temp = array();
                 $temp['title'] = $title;
-                $temp['resume'] = 'http://' . $server_ip . '/wooble-api/' . UPLOAD_PATH . $resume;
+                $temp['resume'] = 'https://' . 'app.wooble.org/home/pdf_files/' . $resume;
                 array_push($images, $temp);
             }
             $response['error'] = false;
