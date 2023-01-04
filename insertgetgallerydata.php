@@ -12,7 +12,7 @@ if (isset($_GET['apicall'])) {
                 try {
                     move_uploaded_file($_FILES['pic']['tmp_name'], UPLOAD_PATH . $_FILES['pic']['name']);
                     $stmt = $conn->prepare("INSERT INTO `gallery_db`(`email_id`,`file_name`,`thumbnail`,`file_content`,`title`,`description`,`file_created`) VALUES (?,?,?,?,?,?,?)");
-                    $stmt->bind_param("sssssss", $_POST['email_id'], $_FILES['pic']['name'],$_FILES['pic']['name'],$_FILES['pic']['name'],$_POST['title'], $_POST['description'], $file_created);
+                    $stmt->bind_param("sssssss", $_POST['email_id'], $_FILES['pic']['name'],$_FILES['pic']['name'],'',$_POST['title'], $_POST['description'], $file_created);
                     if ($stmt->execute()) {
                         $response['error'] = false;
                         $response['message'] = 'Uploaded successfully';

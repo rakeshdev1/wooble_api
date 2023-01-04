@@ -46,7 +46,7 @@ if (isset($_GET['apicall'])) {
             $images = array();
             while ($stmt->fetch()) {
                 $temp = array();
-                $temp['image'] = 'http://' . $server_ip . '/wooble-api/' . UPLOAD_PATH . $image;
+                $temp['image'] = 'https://' . 'wooble.org/app/home/images/' . $image;
                 array_push($images, $temp);
             }
 
