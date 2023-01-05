@@ -83,15 +83,15 @@ if (isset($_GET['apicall'])) {
         case 'getresumedata':
             $server_ip = gethostbyname(gethostname());
             $profileEmail = validate($_POST['email_id']);
-            $stmt = $conn->prepare("SELECT resume,title FROM resume_db WHERE email_id=?");
+            $stmt = $conn->prepare("SELECT content FROM resume WHERE email=?");
             $stmt->bind_param("s", $_POST['email_id']);
             $stmt->execute();
-            $stmt->bind_result($resume, $title);
+            $stmt->bind_result($resume);
             $images = array();
             while ($stmt->fetch()) {
                 $temp = array();
-                $temp['title'] = $title;
-                $temp['resume'] = 'https://' . 'app.wooble.org/home/pdf_files/' . $resume;
+                $temp['title'] = $_POST['email_id'];
+                $temp['resume'] = 'https://app.wooble.org/home/pdf_files/' . $resume;
                 array_push($images, $temp);
             }
             $response['error'] = false;
