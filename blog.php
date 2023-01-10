@@ -10,6 +10,7 @@ if (isset($_GET['apicall'])) {
         case 'startblog':
             if (isset($_POST['email_id'])) {
                 try {
+                    $return = false;
                     date_default_timezone_set("Asia/Calcutta");
                     $file_created = date('Y-m-d H:i:s a', time());
                     $stmt = $conn->prepare("INSERT INTO `blogs`(`email_id`,`time_created`) VALUES (?,?)");
@@ -20,7 +21,8 @@ if (isset($_GET['apicall'])) {
                     $stmt2 = $conn->prepare("SELECT blog_id FROM `blogs` WHERE `email_id`=? AND `time_created`=?");
                     $stmt2->bind_param("ss", $email, $file_created);
                     $stmt2->execute();
-                    $return=$stmt2->bind_result($file_id);
+                    $stmt2->bind_result($file_id);
+                    $return=true;
                     $images = array();
 
                     while ($stmt2->fetch()) {
