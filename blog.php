@@ -6,6 +6,54 @@ define('UPLOAD_PATH', 'blog_pic/');
 $response = array();
 if (isset($_GET['apicall'])) {
     switch ($_GET['apicall']) {
+        
+        case 'startblog':
+            if (isset($_POST['email_id'])) {
+                try {
+                    date_default_timezone_set("Asia/Calcutta");
+                    $file_created = date('Y-m-d H:i:s a', time());
+                    $stmt = $conn->prepare("INSERT INTO `blogs`(`email_id`,`time_created`) VALUES (?,?)");
+                    $stmt->bind_param("ss", $_POST['email_id'], $file_created);
+
+                    $email = validate($_POST['email_id']);
+                    $title = validate($_POST['title']);
+                    $content = validate($_POST['content']);
+
+                    $stmt2 = $conn->prepare("SELECT blog_id FROM `blogs` WHERE `email_id`=? AND `time_created`=?");
+                    $stmt2->bind_param("ss", $email, $file_created);
+                    $stmt2->execute();
+                    $return=$stmt2->bind_result($file_id);
+                    $images = array();
+
+                    while ($stmt2->fetch()) {
+                        $temp = array();
+                        $temp['file_id'] = $file_id;
+                        array_push($images, $temp);
+                    }
+
+                    if ($return!== false) {
+                        $response['error'] = false;
+                        $response['message'] = $file_id;
+                    } else {
+                        throw new Exception("Could not create blog");
+                    }
+                    echo json_encode($response);
+                } catch (Exception $e) {
+                    $response['error'] = true;
+                    $response['message'] = 'Could not upload file';
+                }
+            } else {
+                $response['error'] = true;
+                $response['message'] = "Required params not available";
+            }
+
+
+            break;
+        
+
+        case 'uploadblogimage':
+
+            break;
         case 'insertblogdata':
             if (isset($_POST['title']) || isset($_POST['content'])) {
                 try {
