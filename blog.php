@@ -18,11 +18,11 @@ if (isset($_GET['apicall'])) {
 
                     $email = validate($_POST['email_id']);
 
-                    $stmt2 = $conn->prepare("SELECT blog_id FROM `blogs` WHERE `email_id`=? AND `time_created`=?");
+                    $return=$stmt2 = $conn->prepare("SELECT blog_id FROM `blogs` WHERE `email_id`=? AND `time_created`=?");
                     $stmt2->bind_param("ss", $email, $file_created);
                     $stmt2->execute();
                     $stmt2->bind_result($file_id);
-                    $return=true;
+                    
                     $images = array();
 
                     while ($stmt2->fetch()) {
