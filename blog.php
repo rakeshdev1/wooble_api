@@ -2,7 +2,7 @@
 
 require_once "conn.php";
 require_once "validate.php";
-define('UPLOAD_PATH', 'blog_pic/');
+define('UPLOAD_PATH', '../img/blog_assets/');
 $response = array();
 if (isset($_GET['apicall'])) {
     switch ($_GET['apicall']) {
