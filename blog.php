@@ -15,13 +15,15 @@ if (isset($_GET['apicall'])) {
                     $file_created = date('Y-m-d H:i:s a', time());
                     $stmt = $conn->prepare("INSERT INTO `blogs`(`email_id`,`time_created`) VALUES (?,?)");
                     $stmt->bind_param("ss", $_POST['email_id'], $file_created);
+                    $stmt->execute();
 
                     $email = validate($_POST['email_id']);
 
-                    $return=$stmt2 = $conn->prepare("SELECT blog_id FROM `blogs` WHERE `email_id`=? AND `time_created`=?");
+                    $stmt2 = $conn->prepare("SELECT blog_id FROM `blogs` WHERE `email_id`=? AND `time_created`=?");
                     $stmt2->bind_param("ss", $email, $file_created);
                     $stmt2->execute();
                     $stmt2->bind_result($file_id);
+                    $return=true;
                     
                     $images = array();
 
