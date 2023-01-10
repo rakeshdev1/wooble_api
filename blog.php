@@ -16,8 +16,6 @@ if (isset($_GET['apicall'])) {
                     $stmt->bind_param("ss", $_POST['email_id'], $file_created);
 
                     $email = validate($_POST['email_id']);
-                    $title = validate($_POST['title']);
-                    $content = validate($_POST['content']);
 
                     $stmt2 = $conn->prepare("SELECT blog_id FROM `blogs` WHERE `email_id`=? AND `time_created`=?");
                     $stmt2->bind_param("ss", $email, $file_created);
