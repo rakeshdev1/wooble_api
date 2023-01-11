@@ -1,17 +1,24 @@
 <?php
+
 require_once "conn.php";
+// define('DB_HOST', 'localhost');
+// define('DB_USER', 'root');
+// define('DB_PASS', '');
+// define('DB_NAME', 'wooble');
+// $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die('Unable to connect');
 require_once "validate.php";
 define('UPLOAD_PATH', '../img/blog_assets/');
 $response = array();
 if (isset($_GET['apicall'])) {
     switch ($_GET['apicall']) {
+        
         case 'startblog':
             if (isset($_POST['email_id'])) {
                 try {
-                    date_default_timezone_set("Asia/Calcutta");
-                    $file_created = date('Y-m-d H:i:s a', time());
-                    $stmt = $conn->prepare("INSERT INTO `blogs`(`email_id`,`time_created`) VALUES (?,?)");
-                    $stmt->bind_param("ss", $_POST['email_id'], $file_created);
+                    //date_default_timezone_set("Asia/Calcutta");
+                    //$file_created = date('Y-m-d H:i:s a', time());
+                    $stmt = $conn->prepare("INSERT INTO `blogs`(`email_id`) VALUES (?,?)");
+                    $stmt->bind_param("s", $_POST['email_id']);
                     $result=$stmt->execute();
                     $email = validate($_POST['email_id']);
                     $stmt2 = $conn->prepare("SELECT blog_id FROM `blogs` WHERE `email_id`=? AND `time_created`=?");
@@ -38,9 +45,11 @@ if (isset($_GET['apicall'])) {
                 $response['message'] = "Required params not available";
             }
         break;
+        
         case 'uploadblogimage':
 
         break;
+        
         case 'insertblogdata':
             if (isset($_POST['title']) || isset($_POST['content'])) {
                 try {
@@ -95,7 +104,7 @@ if (isset($_GET['apicall'])) {
                 $response['error'] = true;
                 $response['message'] = "Required params not available";
             }
-        break;
+            break;
 
         case 'getblogdata':
 
