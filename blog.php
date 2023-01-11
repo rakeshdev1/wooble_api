@@ -1,33 +1,28 @@
 <?php
 
 require_once "conn.php";
-// define('DB_HOST', 'localhost');
-// define('DB_USER', 'root');
-// define('DB_PASS', '');
-// define('DB_NAME', 'wooble');
-// $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die('Unable to connect');
 require_once "validate.php";
 define('UPLOAD_PATH', '../img/blog_assets/');
 $response = array();
 if (isset($_GET['apicall'])) {
     switch ($_GET['apicall']) {
-        
         case 'startblog':
             if (isset($_POST['email_id'])) {
                 try {
-                    //date_default_timezone_set("Asia/Calcutta");
-                    //$file_created = date('Y-m-d H:i:s a', time());
-                    $stmt = $conn->prepare("INSERT INTO `blogs`(`email_id`) VALUES (?)");
-                    $stmt->bind_param("s", $_POST['email_id']);
-                    $result=$stmt->execute();
+                    date_default_timezone_set("Asia/Calcutta");
+                    $file_created = date("Y-m-d H:i:s a");
+                    $blog_id = strval(time());
                     $email = validate($_POST['email_id']);
+                    $stmt = $conn->prepare("INSERT INTO `blogs`(`blog_id`,`email_id`,`time_created`) VALUES (?,?,?)");
+                    $stmt->bind_param("sss",$blog_id,$email,$file_created);
+                    $result=$stmt->execute();
                     $stmt2 = $conn->prepare("SELECT blog_id FROM `blogs` WHERE `email_id`=?");
                     $stmt2->bind_param("s", $email);
                     $result = $stmt2->execute();
                     $stmt2->bind_result($file_id);
                     $images = array();
                     while ($stmt2->fetch()) {
-                        $new_file_id=$file_id;
+                        $new_file_id=strval($file_id);
                     }
                     if ($result == true) {
                         $response['error'] = false;
