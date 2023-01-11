@@ -1,12 +1,10 @@
 <?php
-
-//require_once "conn.php";
+require_once "conn.php";
 require_once "validate.php";
 define('UPLOAD_PATH', '../img/blog_assets/');
 $response = array();
 if (isset($_GET['apicall'])) {
     switch ($_GET['apicall']) {
-        
         case 'startblog':
             if (isset($_POST['email_id'])) {
                 try {
@@ -14,25 +12,16 @@ if (isset($_GET['apicall'])) {
                     $file_created = date('Y-m-d H:i:s a', time());
                     $stmt = $conn->prepare("INSERT INTO `blogs`(`email_id`,`time_created`) VALUES (?,?)");
                     $stmt->bind_param("ss", $_POST['email_id'], $file_created);
-                    $stmt->execute();
-
+                    $result=$stmt->execute();
                     $email = validate($_POST['email_id']);
-
                     $stmt2 = $conn->prepare("SELECT blog_id FROM `blogs` WHERE `email_id`=? AND `time_created`=?");
                     $stmt2->bind_param("ss", $email, $file_created);
                     $result = $stmt2->execute();
                     $stmt2->bind_result($file_id);
-                    
-                    
                     $images = array();
-
                     while ($stmt2->fetch()) {
-                        // $temp = array();
-                        // $temp['file_id'] = $file_id;
-                        // array_push($images, $temp);
                         $new_file_id=$file_id;
                     }
-
                     if ($result == true) {
                         $response['error'] = false;
                         $response['message'] = $new_file_id;
@@ -48,14 +37,10 @@ if (isset($_GET['apicall'])) {
                 $response['error'] = true;
                 $response['message'] = "Required params not available";
             }
-
-
-            break;
-        
-
+        break;
         case 'uploadblogimage':
 
-            break;
+        break;
         case 'insertblogdata':
             if (isset($_POST['title']) || isset($_POST['content'])) {
                 try {
@@ -110,7 +95,7 @@ if (isset($_GET['apicall'])) {
                 $response['error'] = true;
                 $response['message'] = "Required params not available";
             }
-            break;
+        break;
 
         case 'getblogdata':
 
