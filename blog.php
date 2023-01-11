@@ -1,11 +1,11 @@
 <?php
 
-//require_once "conn.php";
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'wooble');
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die('Unable to connect');
+require_once "conn.php";
+// define('DB_HOST', 'localhost');
+// define('DB_USER', 'root');
+// define('DB_PASS', '');
+// define('DB_NAME', 'wooble');
+// $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die('Unable to connect');
 require_once "validate.php";
 define('UPLOAD_PATH', '../img/blog_assets/');
 $response = array();
