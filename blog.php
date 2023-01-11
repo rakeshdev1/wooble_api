@@ -1,6 +1,6 @@
 <?php
 
-require_once "conn.php";
+//require_once "conn.php";
 require_once "validate.php";
 define('UPLOAD_PATH', '../img/blog_assets/');
 $response = array();
@@ -10,7 +10,6 @@ if (isset($_GET['apicall'])) {
         case 'startblog':
             if (isset($_POST['email_id'])) {
                 try {
-                    $return = false;
                     date_default_timezone_set("Asia/Calcutta");
                     $file_created = date('Y-m-d H:i:s a', time());
                     $stmt = $conn->prepare("INSERT INTO `blogs`(`email_id`,`time_created`) VALUES (?,?)");
@@ -21,21 +20,22 @@ if (isset($_GET['apicall'])) {
 
                     $stmt2 = $conn->prepare("SELECT blog_id FROM `blogs` WHERE `email_id`=? AND `time_created`=?");
                     $stmt2->bind_param("ss", $email, $file_created);
-                    $stmt2->execute();
+                    $result = $stmt2->execute();
                     $stmt2->bind_result($file_id);
-                    $return=true;
+                    
                     
                     $images = array();
 
                     while ($stmt2->fetch()) {
-                        $temp = array();
-                        $temp['file_id'] = $file_id;
-                        array_push($images, $temp);
+                        // $temp = array();
+                        // $temp['file_id'] = $file_id;
+                        // array_push($images, $temp);
+                        $new_file_id=$file_id;
                     }
 
-                    if ($return!== false) {
+                    if ($result == true) {
                         $response['error'] = false;
-                        $response['message'] = $file_id;
+                        $response['message'] = $new_file_id;
                     } else {
                         throw new Exception("Could not create blog");
                     }
