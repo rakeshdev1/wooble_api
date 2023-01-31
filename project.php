@@ -42,7 +42,7 @@ if (isset($_GET['apicall'])) {
                     }
 
                     $max_entry_id = 0;
-                    $stmt2 = $conn->prepare("SELECT MAX(entry_id) FROM project_db");
+                    $stmt2 = $conn->prepare("SELECT MAX(entry_id) FROM works_db");
                     $stmt2->execute();
                     $stmt2->bind_result($fgh);
                     while ($stmt2->fetch()) {
@@ -110,7 +110,7 @@ if (isset($_GET['apicall'])) {
                         $decode_project_pdf_name = 'https://app.wooble.org/works/upload' . $project_pdf_name . ".pdf";
                     }
 
-                    $stmt = $conn->prepare("INSERT INTO `project_db`(`email_id`, `work_title`, `aim_of_work`, `work_description`, `image_1`, `image_2`, `image_3`, `image_4`, `image_5`, `image_6`, `video`, `pdf_file`, `conclusion`, `added_date`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                    $stmt = $conn->prepare("INSERT INTO `works_db`(`email_id`, `work_title`, `aim_of_work`, `work_description`, `image_1`, `image_2`, `image_3`, `image_4`, `image_5`, `image_6`, `video`, `pdf_file`, `conclusion`, `added_date`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                     $stmt->bind_param("ssssssssssssss", $email_id, $work_title, $aim_of_work, $work_description, $decode_image_1_name, $decode_image_2_name, $decode_image_3_name, $decode_image_4_name, $decode_image_5_name, $decode_image_6_name, $decode_video_name, $decode_project_pdf_name, $conclusion, $added_date);
 
                     if ($stmt->execute()) {
@@ -271,11 +271,11 @@ if (isset($_GET['apicall'])) {
                         $decode_project_pdf_name = 'https://app.wooble.org/works/upload' . $project_pdf_name . ".pdf";
                     }
                     $zeero = null;
-                    $stmt1 = $conn->prepare("UPDATE `project_db` SET `work_title`=?,`aim_of_work`=?,`work_description`=?,`image_1`=?,`image_2`=?,`image_3`=?,`image_4`=?,`image_5`=?,`image_6`=?,`video`=?,`pdf_file`=?,`conclusion`=?,`added_date`=? WHERE `entry_id`=? AND `email_id`=?");
+                    $stmt1 = $conn->prepare("UPDATE `works_db` SET `work_title`=?,`aim_of_work`=?,`work_description`=?,`image_1`=?,`image_2`=?,`image_3`=?,`image_4`=?,`image_5`=?,`image_6`=?,`video`=?,`pdf_file`=?,`conclusion`=?,`added_date`=? WHERE `entry_id`=? AND `email_id`=?");
                     $stmt1->bind_param("sssssssssssssss", $zeero, $zeero, $zeero, $zeero, $zeero, $zeero, $zeero, $zeero, $zeero, $zeero, $zeero, $zeero, $zeero, $entry_id, $email_id);
                     $stmt1->execute();
 
-                    $stmt = $conn->prepare("UPDATE `project_db` SET `email_id`=?,`work_title`=?,`aim_of_work`=?,`work_description`=?,`image_1`=?,`image_2`=?,`image_3`=?,`image_4`=?,`image_5`=?,`image_6`=?,`video`=?,`pdf_file`=?,`conclusion`=?,`added_date`=? WHERE `entry_id`=? AND `email_id`=?");
+                    $stmt = $conn->prepare("UPDATE `works_db` SET `email_id`=?,`work_title`=?,`aim_of_work`=?,`work_description`=?,`image_1`=?,`image_2`=?,`image_3`=?,`image_4`=?,`image_5`=?,`image_6`=?,`video`=?,`pdf_file`=?,`conclusion`=?,`added_date`=? WHERE `entry_id`=? AND `email_id`=?");
                     $stmt->bind_param("ssssssssssssssss", $email_id, $work_title, $aim_of_work, $work_description, $decode_image_1_name, $decode_image_2_name, $decode_image_3_name, $decode_image_4_name, $decode_image_5_name, $decode_image_6_name, $decode_video_name, $decode_project_pdf_name, $conclusion, $added_date, $entry_id, $email_id);
 
                     if ($stmt->execute()) {
@@ -297,7 +297,7 @@ if (isset($_GET['apicall'])) {
         case 'getprojectdata':
             $server_ip = gethostbyname(gethostname());
             $profileEmail = validate($_POST['email_id']);
-            $stmt = $conn->prepare("SELECT `entry_id`, `email_id`, `work_title`, `aim_of_work`, `work_description`, `image_1`, `image_2`, `image_3`, `image_4`, `image_5`, `image_6`, `video`, `pdf_file`, `conclusion` FROM `project_db` WHERE email_id=?");
+            $stmt = $conn->prepare("SELECT `entry_id`, `email_id`, `work_title`, `aim_of_work`, `work_description`, `image_1`, `image_2`, `image_3`, `image_4`, `image_5`, `image_6`, `video`, `pdf_file`, `conclusion` FROM `works_db` WHERE email_id=?");
             $stmt->bind_param("s", $profileEmail);
             $stmt->execute();
             $stmt->bind_result($entry_id, $email_id, $work_title, $aim_of_work, $work_description, $image_1, $image_2, $image_3, $image_4, $image_5, $image_6, $video, $pdf_file, $conclusion);
@@ -330,7 +330,7 @@ if (isset($_GET['apicall'])) {
 
             if (isset($_POST['entry_id']) && isset($_POST['email_id'])) {
                 try {
-                    $stmt1 = $conn->prepare("DELETE FROM `project_db` WHERE `entry_id`=? AND `email_id`=?");
+                    $stmt1 = $conn->prepare("DELETE FROM `works_db` WHERE `entry_id`=? AND `email_id`=?");
                     $stmt1->bind_param("ss", $_POST['entry_id'], $_POST['email_id']);
                     if ($stmt1->execute()) {
                         $response['error'] = false;
