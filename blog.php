@@ -8,9 +8,9 @@ define('DB_PASS', '');
 define('DB_NAME', 'wooble');
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die('Unable to connect');
 require_once "validate.php";
-//define('UPLOAD_PATH', '../img/blog_assets/');
+define('UPLOAD_PATH', '../img/blog_assets/');
 $server_ip = gethostbyname(gethostname());
-define('UPLOAD_PATH', 'blog_assets/');
+//define('UPLOAD_PATH', 'blog_assets/');
 $response = array();
 if (isset($_GET['apicall'])) {
     switch ($_GET['apicall']) {
