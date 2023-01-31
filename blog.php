@@ -1,8 +1,16 @@
 <?php
 
-require_once "conn.php";
+//require_once "conn.php";
+
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'wooble');
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die('Unable to connect');
 require_once "validate.php";
-define('UPLOAD_PATH', '../img/blog_assets/');
+//define('UPLOAD_PATH', '../img/blog_assets/');
+$server_ip = gethostbyname(gethostname());
+define('UPLOAD_PATH', 'blog_assets/');
 $response = array();
 if (isset($_GET['apicall'])) {
     switch ($_GET['apicall']) {
@@ -42,7 +50,169 @@ if (isset($_GET['apicall'])) {
         break;
         
         case 'uploadblogimage':
+            if (isset($_POST['email_id']) && isset($_POST['blog_id']) && isset($_POST['image'] )) {
+                try {
+                    $blog_id = $_POST['blog_id'];
+                    $email = validate($_POST['email_id']);
+                    $blog_id = $_POST['blog_id'];
+                    $image = $_POST['image'];
+                    if (base64_decode($image) != "NULL") {
+                        $image_name = rand().'-'.$blog_id;
+                        $decode_image = base64_decode("$image");
+                        $result = file_put_contents(UPLOAD_PATH . $image_name . ".WEBP", $decode_image);
+                    }
+                    if ($result == true) {
+                        $response['error'] = false;
+                        $response['message'] = $image_name.".WEBP";
+                    } else {
+                        throw new Exception("Could not create blog");
+                    }
+                    echo json_encode($response);
+                } catch (Exception $e) {
+                    $response['error'] = true;
+                    $response['message'] = 'Could not upload file';
+                }
+            } else {
+                $response['error'] = true;
+                $response['message'] = "Required params not available";
+            }
+        break;
 
+        case 'uploadblogvideo':
+            if (isset($_POST['email_id']) && isset($_POST['blog_id']) && isset($_POST['video'] )) {
+                try {
+                    $blog_id = $_POST['blog_id'];
+                    $email = validate($_POST['email_id']);
+                    $blog_id = $_POST['blog_id'];
+                    $video = validate($_POST['video']);
+                    if (base64_decode($video) != "NULL") {
+                        $video_name = rand().'-'.$blog_id;
+                        $decode_video = base64_decode("$video");
+                        $result = file_put_contents(UPLOAD_PATH . $video_name . ".MP4", $decode_video);
+                    }
+                    if ($result == true) {
+                        $response['error'] = false;
+                        $response['message'] = $video_name.".MP4";
+                    } else {
+                        throw new Exception("Could not create blog");
+                    }
+                    echo json_encode($response);
+                } catch (Exception $e) {
+                    $response['error'] = true;
+                    $response['message'] = 'Could not upload file';
+                }
+            } else {
+                $response['error'] = true;
+                $response['message'] = "Required params not available";
+            }
+        break;
+
+
+        case 'uploadblogaudio':
+            if (isset($_POST['email_id']) && isset($_POST['blog_id']) && isset($_POST['audio'] )) {
+                try {
+                    $blog_id = $_POST['blog_id'];
+                    $email = validate($_POST['email_id']);
+                    $blog_id = $_POST['blog_id'];
+                    $audio = validate($_POST['audio']);
+                    if (base64_decode($audio) != "NULL") {
+                        $audio_name = rand().'-'.$blog_id;
+                        $decode_audio = base64_decode("$audio");
+                        $result = file_put_contents(UPLOAD_PATH . $audio_name . ".MP3", $decode_audio);
+                    }
+                    if ($result == true) {
+                        $response['error'] = false;
+                        $response['message'] = $audio_name.".MP3";
+                    } else {
+                        throw new Exception("Could not create blog");
+                    }
+                    echo json_encode($response);
+                } catch (Exception $e) {
+                    $response['error'] = true;
+                    $response['message'] = 'Could not upload file';
+                }
+            } else {
+                $response['error'] = true;
+                $response['message'] = "Required params not available";
+            }
+        break;
+
+
+        case 'publishblog':
+            if (isset($_POST['title']) || isset($_POST['content'])) {
+                try {
+                    date_default_timezone_set("Asia/Calcutta");
+                    $file_created = date("Y-m-d H:i:s a");
+                    $blog_status = 1;
+                    $stmt = $conn->prepare("UPDATE `blogs` SET `title`=?,`last_updated`=?,`content`=?,`blog_status`=? WHERE `blog_id`=? AND `email_id`=?");
+                    $stmt->bind_param("ssssss", $_POST['title'], $file_created, $_POST['content'], $blog_status,$_POST['blog_id'],$_POST['email_id']);
+                    if ($stmt->execute()) {
+                        $response['error'] = false;
+                        $response['message'] = 'Blog Published';
+                    } else {
+                        throw new Exception("Could not upload file");
+                    }
+                    echo json_encode($response);
+                } catch (Exception $e) {
+                    $response['error'] = true;
+                    $response['message'] = 'Could not upload file';
+                }
+            } else {
+                $response['error'] = true;
+                $response['message'] = "Required params not available";
+            }
+        break;
+
+        case 'publishdraft':
+            if (isset($_POST['title']) || isset($_POST['content'])) {
+                try {
+                    date_default_timezone_set("Asia/Calcutta");
+                    $file_created = date("Y-m-d H:i:s a");
+                    $stmt = $conn->prepare("UPDATE `blogs` SET `title`=?,`last_updated`=?,`content`=? WHERE `blog_id`=? AND `email_id`=?");
+                    $stmt->bind_param("sssss", $_POST['title'], $file_created, $_POST['content'],$_POST['blog_id'],$_POST['email_id']);
+                    if ($stmt->execute()) {
+                        $response['error'] = false;
+                        $response['message'] = 'Blog Saved as Draft';
+                    } else {
+                        throw new Exception("Could not upload file");
+                    }
+                    echo json_encode($response);
+                } catch (Exception $e) {
+                    $response['error'] = true;
+                    $response['message'] = 'Could not upload file';
+                }
+            } else {
+                $response['error'] = true;
+                $response['message'] = "Required params not available";
+            }
+        break;
+
+
+        case 'deleterow':
+            if (isset($_POST['email_id']) && isset($_POST['blog_id'])) {
+                try {
+                    $blog_id = $_POST['blog_id'];
+                    $email = validate($_POST['email_id']);
+                    $blog_id = $_POST['blog_id'];
+                    $stmt = $conn->prepare("DELETE FROM `blogs` WHERE email_id=? AND blog_id=?");
+                    $stmt->bind_param("ss",$email,$blog_id);
+                    $result=$stmt->execute();
+                
+                    if ($result == true) {
+                        $response['error'] = false;
+                        $response['message'] = "Blog Deleted Successfully";
+                    } else {
+                        throw new Exception("Could not create blog");
+                    }
+                    echo json_encode($response);
+                } catch (Exception $e) {
+                    $response['error'] = true;
+                    $response['message'] = 'Could not upload file';
+                }
+            } else {
+                $response['error'] = true;
+                $response['message'] = "Required params not available";
+            }
         break;
 
         case 'insertblogdata':
@@ -102,25 +272,19 @@ if (isset($_GET['apicall'])) {
             break;
 
         case 'getblogdata':
-
-            $server_ip = gethostbyname(gethostname());
-
-            $profileEmail = validate($_POST['email_id']);
-            $stmt = $conn->prepare("SELECT blog_db.file_id, user_info.full_name, blog_db.title, blog_db.content, blog_db.created_date
-            FROM user_info
-            INNER JOIN blog_db ON user_info.email=? AND blog_db.email_id=?");
-            $stmt->bind_param("ss", $_POST['email_id'], $_POST['email_id']);
+            $stmt = $conn->prepare("SELECT blog_id, title, content, last_updated FROM blogs WHERE email_id=?");
+            $stmt->bind_param("s", $_POST['email_id']);
             $stmt->execute();
-            $stmt->bind_result($file_id, $full_name, $title, $content, $created_date);
+            $stmt->bind_result($blog_id, $title, $content, $last_updated);
 
             $images = array();
             while ($stmt->fetch()) {
                 $temp = array();
-                $temp['file_id'] = $file_id;
-                $temp['full_name'] = $full_name;
+                $temp['blog_id'] = $blog_id;
+                //$temp['full_name'] = $full_name;
                 $temp['title'] = $title;
                 $temp['content'] = $content;
-                $temp['created_date'] = $created_date;
+                $temp['last_updated'] = $last_updated;
                 array_push($images, $temp);
             }
 
