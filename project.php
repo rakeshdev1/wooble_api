@@ -180,7 +180,7 @@ if (isset($_GET['apicall'])) {
                         $decode_image_1_name=null;
                     } else {
                         $image_1_name = $email_id . "_project_image_1_" . $entry_id;
-                        unlink(UPLOAD_PATH.$image_1_name."jpg");
+                        unlink(UPLOAD_PATH.$image_1_name."WEBP");
                         $decode_image_1 = base64_decode("$image_1");
                         file_put_contents(UPLOAD_PATH . $image_1_name . ".WEBP", $decode_image_1);
                         $decode_image_1_name = 'https://app.wooble.org/works/upload' . $image_1_name . ".WEBP";
@@ -193,7 +193,7 @@ if (isset($_GET['apicall'])) {
                         $decode_image_2_name=null;
                     }else{
                         $image_2_name = $email_id . "_project_image_2_" . $entry_id;
-                        unlink(UPLOAD_PATH.$image_2_name."jpg");
+                        unlink(UPLOAD_PATH.$image_2_name."WEBP");
                         $decode_image_2 = base64_decode("$image_2");
                         file_put_contents(UPLOAD_PATH . $image_2_name . ".WEBP", $decode_image_2);
                         $decode_image_2_name = 'https://app.wooble.org/works/upload' . $image_2_name . ".WEBP";
@@ -205,7 +205,7 @@ if (isset($_GET['apicall'])) {
                         $decode_image_3_name=null;
                     }else{
                         $image_3_name = $email_id . "_project_image_3_" . $entry_id;
-                        unlink(UPLOAD_PATH.$image_3_name."jpg");
+                        unlink(UPLOAD_PATH.$image_3_name."WEBP");
                         $decode_image_3 = base64_decode("$image_3");
                         file_put_contents(UPLOAD_PATH . $image_3_name . ".WEBP", $decode_image_3);
                         $decode_image_3_name = 'https://app.wooble.org/works/upload' . $image_3_name . ".WEBP";
@@ -217,7 +217,7 @@ if (isset($_GET['apicall'])) {
                         $decode_image_4_name=null;
                     }else{
                         $image_4_name = $email_id . "_project_image_4_" . $entry_id;
-                        unlink(UPLOAD_PATH.$image_4_name."jpg");
+                        unlink(UPLOAD_PATH.$image_4_name."WEBP");
                         $decode_image_4 = base64_decode("$image_4");
                         file_put_contents(UPLOAD_PATH . $image_4_name . ".WEBP", $decode_image_4);
                         $decode_image_4_name = 'https://app.wooble.org/works/upload' . $image_4_name . ".WEBP";
@@ -229,7 +229,7 @@ if (isset($_GET['apicall'])) {
                         $decode_image_5_name=null;
                     }else{
                         $image_5_name = $email_id . "_project_image_5_" . $entry_id;
-                        unlink(UPLOAD_PATH.$image_5_name."jpg");
+                        unlink(UPLOAD_PATH.$image_5_name."WEBP");
                         $decode_image_5 = base64_decode("$image_5");
                         file_put_contents(UPLOAD_PATH . $image_5_name . ".WEBP", $decode_image_5);
                         $decode_image_5_name = 'https://app.wooble.org/works/upload' . $image_5_name . ".WEBP";
@@ -241,7 +241,7 @@ if (isset($_GET['apicall'])) {
                         $decode_image_6_name=null;
                     }else{
                         $image_6_name = $email_id . "_project_image_6_" . $entry_id;
-                        unlink(UPLOAD_PATH.$image_6_name."jpg");
+                        unlink(UPLOAD_PATH.$image_6_name."WEBP");
                         $decode_image_6 = base64_decode("$image_6");
                         file_put_contents(UPLOAD_PATH . $image_6_name . ".WEBP", $decode_image_6);
                         $decode_image_6_name = 'https://app.wooble.org/works/upload' . $image_6_name . ".WEBP";
