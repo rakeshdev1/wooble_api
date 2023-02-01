@@ -197,14 +197,14 @@ if (isset($_GET['apicall'])) {
                     $blog_id = $_POST['blog_id'];
                     $email = validate($_POST['email_id']);
                     $searchString = $blog_id;
-                    $files = glob('img/blog_assets/*.WEBP');
+                    $files = glob('../img/blog_assets/*.WEBP');
                     foreach($files as $file) {
                         $name = pathinfo($file, PATHINFO_FILENAME);
                         if(strpos(strtolower($name), strtolower($searchString))) {
                             unlink($file);
                         } 
                     }
-                    $files = glob('img/blog_assets/*.MP4');
+                    $files = glob('../img/blog_assets/*.MP4');
                     foreach($files as $file) {
                         $name = pathinfo($file, PATHINFO_FILENAME);
                         if(strpos(strtolower($name), strtolower($searchString))) {
