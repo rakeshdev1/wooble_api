@@ -144,8 +144,11 @@ if (isset($_GET['apicall'])) {
                     date_default_timezone_set("Asia/Calcutta");
                     $file_created = date("Y-m-d H:i:s a");
                     $blog_status = 1;
-                    $stmt = $conn->prepare("UPDATE `blogs` SET `title`=?,`last_updated`=?,`content`=?,`blog_status`=? WHERE `blog_id`=? AND `email_id`=?");
-                    $stmt->bind_param("ssssss", $_POST['title'], $file_created, $_POST['content'], $blog_status,$_POST['blog_id'],$_POST['email_id']);
+                    $str = $_POST['title'];
+                    $res = preg_replace('/[^a-zA-Z0-9_ -]/s',' ',$str);
+                    $canonical_url = str_replace( array( ' ' ), '-', $res);
+                    $stmt = $conn->prepare("UPDATE `blogs` SET `canonical_url`=?,`title`=?,`last_updated`=?,`content`=?,`blog_status`=? WHERE `blog_id`=? AND `email_id`=?");
+                    $stmt->bind_param("sssssss",$canonical_url, $_POST['title'], $file_created, $_POST['content'], $blog_status,$_POST['blog_id'],$_POST['email_id']);
                     if ($stmt->execute()) {
                         $response['error'] = false;
                         $response['message'] = 'Blog Published';
@@ -373,4 +376,3 @@ if (isset($_GET['apicall'])) {
     echo "The page that you have requested could not be found.";
     exit();
 }
-?>
