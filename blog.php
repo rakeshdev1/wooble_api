@@ -2,10 +2,10 @@
 
 require_once "conn.php";
 
-//define('DB_HOST', 'localhost');
-//define('DB_USER', 'root');
-//define('DB_PASS', '');
-//define('DB_NAME', 'wooble');
+// define('DB_HOST', 'localhost');
+// define('DB_USER', 'root');
+// define('DB_PASS', '');
+// define('DB_NAME', 'wooble');
 //$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die('Unable to connect');
 require_once "validate.php";
 define('UPLOAD_PATH', '../img/blog_assets/');
@@ -193,7 +193,22 @@ if (isset($_GET['apicall'])) {
                 try {
                     $blog_id = $_POST['blog_id'];
                     $email = validate($_POST['email_id']);
-                    $blog_id = $_POST['blog_id'];
+                    $searchString = $blog_id;
+                    $files = glob('img/blog_assets/*.WEBP');
+                    foreach($files as $file) {
+                        $name = pathinfo($file, PATHINFO_FILENAME);
+                        if(strpos(strtolower($name), strtolower($searchString))) {
+                            unlink($file);
+                        } 
+                    }
+                    $files = glob('img/blog_assets/*.MP4');
+                    foreach($files as $file) {
+                        $name = pathinfo($file, PATHINFO_FILENAME);
+                        if(strpos(strtolower($name), strtolower($searchString))) {
+                            unlink($file);
+                        } 
+                    }
+                    
                     $stmt = $conn->prepare("DELETE FROM `blogs` WHERE email_id=? AND blog_id=?");
                     $stmt->bind_param("ss",$email,$blog_id);
                     $result=$stmt->execute();
