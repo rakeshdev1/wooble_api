@@ -1,7 +1,13 @@
 <?php
-require_once "conn.php";
+//require_once "conn.php";
 require_once "validate.php";
 define('UPLOAD_PATH', '../home/pdf_files/');
+// define('DB_HOST', 'localhost');
+// define('DB_USER', 'root');
+// define('DB_PASS', '');
+// define('DB_NAME', 'wooble');
+// $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die('Unable to connect');
+// define('UPLOAD_PATH', 'upload/');
 $response = array();
 if (isset($_GET['apicall'])) {
     switch ($_GET['apicall']) {
