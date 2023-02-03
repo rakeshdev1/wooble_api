@@ -1,7 +1,7 @@
 <?php
 require_once "conn.php";
 require_once "validate.php";
-define('UPLOAD_PATH', 'home/pdf_files/');
+define('UPLOAD_PATH', './home/pdf_files/');
 // define('DB_HOST', 'localhost');
 // define('DB_USER', 'root');
 // define('DB_PASS', '');
