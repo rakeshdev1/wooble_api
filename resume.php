@@ -42,7 +42,7 @@ if (isset($_GET['apicall'])) {
                         $decoderesume = base64_decode("$resume");
                         $return = file_put_contents(UPLOAD_PATH . $name . ".pdf", $decoderesume);
                         $resume_name = $_POST['title'] . ".pdf";
-                        $stmt = $conn->prepare("UPDATE `resume_db` SET resume=?,title=?,created_date=? WHERE email_id=?");
+                        $stmt = $conn->prepare("UPDATE `resume` SET resume=?,title=?,created_date=? WHERE email_id=?");
                         $stmt->bind_param("ssss", $resume_name, $_POST['title'], $file_created,$_POST['email_id']);
                         $stmt->execute();
 
@@ -65,7 +65,7 @@ if (isset($_GET['apicall'])) {
 
                         $resume_name = $_POST['title'] . ".pdf";
 
-                        $stmt = $conn->prepare("INSERT INTO `resume_db`(`email_id`,`resume`,`title`,`created_date`) VALUES (?,?,?,?)");
+                        $stmt = $conn->prepare("INSERT INTO `resume`(`email_id`,`resume`,`title`,`created_date`) VALUES (?,?,?,?)");
                         $stmt->bind_param("ssss", $_POST['email_id'], $resume_name, $_POST['title'], $file_created);
                         $stmt->execute();
 
