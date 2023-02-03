@@ -1,7 +1,7 @@
 <?php
 require_once "conn.php";
 require_once "validate.php";
-define('UPLOAD_PATH', 'cover_pic/');
+define('UPLOAD_PATH', 'home/images/');
 $response = array();
 $profileEmail = $_POST['profileEmail'];
 if (isset($_GET['apicall'])) {
@@ -10,7 +10,7 @@ if (isset($_GET['apicall'])) {
             if (isset($_FILES['pic']['name']) && isset($_POST['profileEmail'])) {
                 try {
                     $cover_pic_name = "";
-                    $stmt1 = $conn->prepare("SELECT `cover_pic`FROM `user_info` WHERE email=?");
+                    $stmt1 = $conn->prepare("SELECT `cover_pic`FROM `user_details` WHERE email=?");
                     $stmt1->bind_param("s", $_POST['profileEmail']);
                     $stmt1->execute();
                     $stmt1->bind_result($cover_pic_name_select);
@@ -45,7 +45,7 @@ if (isset($_GET['apicall'])) {
             $images = array();
             while ($stmt->fetch()) {
                 $temp = array();
-                $temp['image'] = 'http://' . $server_ip . '/wooble-api/' . UPLOAD_PATH . $image;
+                $temp['image'] = 'https://' . 'wooble.org/app/home/images/' . $image;
                 array_push($images, $temp);
             }
             $response['error'] = false;
