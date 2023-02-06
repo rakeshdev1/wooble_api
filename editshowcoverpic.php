@@ -19,7 +19,7 @@ if (isset($_GET['apicall'])) {
                     }
                     unlink(UPLOAD_PATH . $cover_pic_name);
                     move_uploaded_file($_FILES['pic']['tmp_name'], UPLOAD_PATH . $_FILES['pic']['name']);
-                    $stmt = $conn->prepare("UPDATE user_info SET cover_pic=? WHERE email=? ");
+                    $stmt = $conn->prepare("UPDATE user_details SET cover_pic=? WHERE email=? ");
                     $stmt->bind_param("ss", $_FILES['pic']['name'], $_POST['profileEmail']);
                     if ($stmt->execute()) {
                         $response['error'] = false;
