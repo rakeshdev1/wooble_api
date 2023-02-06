@@ -1,24 +1,26 @@
 <?php
-require_once "conn.php";
-require_once "validate.php";
-define('UPLOAD_PATH', '../home/pdf_files/');
+ require_once "conn.php";
+ require_once "validate.php";
+ define('UPLOAD_PATH', '../home/pdf_files/');
 
 // define('DB_HOST', 'localhost');
 // define('DB_USER', 'root');
 // define('DB_PASS', '');
 // define('DB_NAME', 'wooble');
 // $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die('Unable to connect');
+$url = 'https://app.wooble.org/home/pdf_files/';
+//$url = 'http://172.168.0.182/wooble_api/upload/';
 //define('UPLOAD_PATH', 'upload/');
 $response = array();
 if (isset($_GET['apicall'])) {
     switch ($_GET['apicall']) {
         case 'insertresumedata':
-            if (isset($_POST['title']) || $_POST['resume'] || $_POST['email_id']) {
+            if ($_POST['resume'] || $_POST['email_id']) {
                 try {
                     $resume_name ="";
                     $user_email = null;
                     $email = validate($_POST['email_id']);
-                    $stmt = $conn->prepare("SELECT email_id FROM `resume_db` WHERE `email_id`=? ");
+                    $stmt = $conn->prepare("SELECT email FROM `resume` WHERE `email`=? ");
                     $stmt->bind_param("s", $email);
                     $stmt->execute();
                     $stmt->bind_result($email_id);
@@ -28,8 +30,7 @@ if (isset($_GET['apicall'])) {
                     }
                     if ($user_email == $_POST['email_id']) {
                         $resume = $_POST['resume'];
-                        $name = $_POST['title'];
-                        $stmt1 = $conn->prepare("SELECT `resume`FROM `resume_db` WHERE email_id=?");
+                        $stmt1 = $conn->prepare("SELECT `content`FROM `resume` WHERE email=?");
                         $stmt1->bind_param("s",$_POST['email_id']);
                         $stmt1->execute();
                         $stmt1->bind_result($resume_name_select);
@@ -38,12 +39,12 @@ if (isset($_GET['apicall'])) {
                         }
                         unlink(UPLOAD_PATH.$resume_name);
                         date_default_timezone_set("Asia/Calcutta");
-                        $file_created = date("Y-m-d");
+                        $file_created = date("Y-m-d H:i:s a");
                         $decoderesume = base64_decode("$resume");
-                        $return = file_put_contents(UPLOAD_PATH . $name . ".pdf", $decoderesume);
-                        $resume_name = $_POST['title'] . ".pdf";
-                        $stmt = $conn->prepare("UPDATE `resume` SET resume=?,title=?,created_date=? WHERE email_id=?");
-                        $stmt->bind_param("ssss", $resume_name, $_POST['title'], $file_created,$_POST['email_id']);
+                        $return = file_put_contents(UPLOAD_PATH . $user_email . ".pdf", $decoderesume);
+                        $resume_name = $_POST['email_id'] . ".pdf";
+                        $stmt = $conn->prepare("UPDATE `resume` SET content=?,last_updated=? WHERE email=?");
+                        $stmt->bind_param("sss", $resume_name, $file_created,$_POST['email_id']);
                         $stmt->execute();
 
                         if ($return !== false) {
@@ -55,18 +56,16 @@ if (isset($_GET['apicall'])) {
                         echo json_encode($response);
                     } else {
                         $resume = $_POST['resume'];
-                        $name = $_POST['title'];
 
                         date_default_timezone_set("Asia/Calcutta");
-                        $file_created = date("Y-m-d");
+                        $file_created = date("Y-m-d H:i:s a");
 
                         $decoderesume = base64_decode("$resume");
-                        $return = file_put_contents(UPLOAD_PATH . $name . ".pdf", $decoderesume);
+                        $return = file_put_contents(UPLOAD_PATH . $user_email . ".pdf", $decoderesume);
 
-                        $resume_name = $_POST['title'] . ".pdf";
-
-                        $stmt = $conn->prepare("INSERT INTO `resume`(`email_id`,`resume`,`title`,`created_date`) VALUES (?,?,?,?)");
-                        $stmt->bind_param("ssss", $_POST['email_id'], $resume_name, $_POST['title'], $file_created);
+                        $resume_name = $_POST['email_id'] . ".pdf";
+                        $stmt = $conn->prepare("INSERT INTO `resume`(`content`,`creation_date`,`email`) VALUES (?,?,?)");
+                        $stmt->bind_param("sss", $resume_name, $file_created, $_POST['email_id']);
                         $stmt->execute();
 
                         if ($return !== false) {
@@ -98,7 +97,7 @@ if (isset($_GET['apicall'])) {
             while ($stmt->fetch()) {
                 $temp = array();
                 $temp['title'] = $_POST['email_id'];
-                $temp['resume'] = 'https://app.wooble.org/home/pdf_files/' . $resume;
+                $temp['resume'] = $url . $resume;
                 array_push($images, $temp);
             }
             $response['error'] = false;
