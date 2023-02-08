@@ -6,8 +6,8 @@ define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_NAME', 'wooble');
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die('Unable to connect');
-//define('UPLOAD_PATH', '../gallery/upload/');
-define('UPLOAD_PATH', 'upload/');
+define('UPLOAD_PATH', '../gallery/upload/');
+//define('UPLOAD_PATH', 'upload/');
 $response = array();
 if (isset($_GET['apicall'])) {
     switch ($_GET['apicall']) {
