@@ -1,14 +1,14 @@
 <?php
-require_once "conn.php";
+//require_once "conn.php";
 require_once "validate.php";
 //define('UPLOAD_PATH', '../gallery/upload/');
-//define('DB_HOST', 'localhost');
-//define('DB_USER', 'root');
-//define('DB_PASS', '');
-//define('DB_NAME', 'wooble');
-//$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die('Unable to connect');
-$url = 'https://' . 'app.wooble.org/gallery/upload/';
-//$url = 'http://172.168.0.182/wooble_api/upload/';
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'wooble');
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME) or die('Unable to connect');
+//$url = 'https://' . 'app.wooble.org/gallery/upload/';
+$url = 'http://172.168.6.55/wooble_api/upload/';
 $response = array();
 if (isset($_GET['apicall'])) {
     switch ($_GET['apicall']) {
